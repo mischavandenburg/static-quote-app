@@ -9,7 +9,10 @@ resources:
 - repo: self
 
 variables:
-  tag: '$(Build.BuildId)'
+- group: mischa-quote
+- name: tag
+  value: '$(Build.BuildId)'
+
 
 stages:
 - stage: Build
