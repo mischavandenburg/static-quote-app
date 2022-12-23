@@ -35,6 +35,9 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         repository: mischavandenburg/static-quote
         tags: $(tag)
+
+- stage: update_tag
+  jobs:
   - job: update_tag_variable 
     displayName: Update Tag Variable
     steps:
