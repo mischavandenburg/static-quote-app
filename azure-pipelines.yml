@@ -21,9 +21,15 @@ stages:
       vmImage: ubuntu-latest
     steps:
     - task: Docker@2
-      displayName: Build an image
+      displayName: Login to Docker Hub
       inputs:
-        command: build
+        command: login
+        containerRegistry: mischa-docker-hub
+    - task: Docker@2
+      displayName: Build and Push
+      inputs:
+        command: buildAndPush
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        repository: mischavandenburg/static-quote
         tags: |
           $(tag)
