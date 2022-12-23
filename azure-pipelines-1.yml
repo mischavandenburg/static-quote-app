@@ -1,0 +1,44 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Git@2
+  inputs:
+    repository: 'https://github.com/mischavandenburg/static-quote-app-gitops.git'
+    branch: 'helm'
+
+- script: |
+    sed -i "s/tag:.*/tag: prod/g" values.yaml
+  displayName: 'Modify values.yaml file'
+
+- task: Git@2
+  inputs:
+    repository: 'https://github.com/mischavandenburg/static-quote-app-gitops.git'
+    branch: 'master'
+    commit: true
+    commitMessage: 'Update tag parameter in values.yaml file'
+    addUntrackedFiles: true
+
+- task: Git@2
+  inputs:
+    repository: 'https://github.com/mischavandenburg/static-quote-app-gitops.git'
+    branch: 'master'
+    push: true
+
+- task: GitHub@0
+  inputs:
+    repository: 'https://github.com/mischavandenburg/static-quote-app-gitops.git'
+    action: create pull request
+    title: 'Update tag parameter in values.yaml file'
+    body: 'This PR updates the tag parameter in the values.yaml file to "prod".'
+    head: 'master'
+    base: 'master'
+
