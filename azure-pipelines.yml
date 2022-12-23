@@ -13,15 +13,15 @@ variables:
 - name: tag
   value: '$(Build.BuildId)'
 
+pool:
+  vmImage: ubuntu-latest
 
 stages:
 - stage: Build
   displayName: Build image
   jobs:
-  - job: Build
+  - job: build_docker_image
     displayName: Build
-    pool:
-      vmImage: ubuntu-latest
     steps:
     - task: Docker@2
       displayName: Login to Docker Hub
@@ -34,5 +34,15 @@ stages:
         command: buildAndPush
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         repository: mischavandenburg/static-quote
-        tags: |
-          $(tag)
+        tags: $(tag)
+  - job: update_tag_variable 
+    displayName: Update Tag Variable
+    steps:
+      - bash: |
+          az pipelines variable-group variable \
+          update --group-id 202 \
+          --org $(System.CollectionUri) \
+          --project $(System.TeamProject) \
+          --name tag --value $(Build.BuildId)
+        env:
+          AZURE_DEVOPS_EXT_PAT: $(System.AccessToken)
