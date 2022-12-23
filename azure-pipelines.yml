@@ -11,7 +11,7 @@ resources:
 variables:
 - group: mischa-quote
 - name: tag
-  value: '$(Build.BuildId)'
+  value: $(Build.BuildId)
 
 pool:
   vmImage: ubuntu-latest
