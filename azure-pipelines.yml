@@ -1,6 +1,5 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+# This pipeline builds a Docker image from a repo and pushes it to Docker hub with the build ID as tag.
+# Then it updates an Azure DevOps group variable with the tag, which will be used in the GitOps pipeline.
 
 trigger:
 - main
